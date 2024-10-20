@@ -11,8 +11,18 @@ class Game {
     this.interval = setInterval(() => {
       this.clear();
       this.draw();
+      this.checkCollisions();
       this.move();
     }, 1000 / 60);
+  }
+
+  checkCollisions() {
+    this.snake.checkCollisions();
+
+    if (this.snake.collides(this.powerUp)) {
+      this.snake.grow();
+      this.powerUp = new PowerUp(this.ctx);
+    }
   }
 
   pause() {

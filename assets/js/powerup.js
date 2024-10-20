@@ -5,8 +5,8 @@ class PowerUp {
     this.w = 30;
     this.h = 30;
 
-    this.x = Math.floor(Math.random() * this.ctx.canvas.width);
-    this.y = Math.floor(Math.random() * this.ctx.canvas.height);
+    this.x = 30 * Math.floor((Math.random() * this.ctx.canvas.width) / this.w);
+    this.y = 30 * Math.floor((Math.random() * this.ctx.canvas.height) / this.h);
   }
 
   draw() {

@@ -5,21 +5,23 @@ class Snake {
     this.w = 30;
     this.h = 30;
 
-    this.x = 200;
-    this.y = 200;
+    this.x = 120;
+    this.y = 120;
 
     this.parts = [
-      { x: this.x * this.w, y: this.y },
-      { x: this.x * this.w, y: this.y },
-      { x: this.x * this.w, y: this.y },
-      { x: this.x * this.w, y: this.y },
-      { x: this.x * this.w, y: this.y },
+      { x: this.x * this.w, y: this.y, w: this.w, h: this.h },
+      { x: this.x * this.w, y: this.y, w: this.w, h: this.h },
+      { x: this.x * this.w, y: this.y, w: this.w, h: this.h },
+      { x: this.x * this.w, y: this.y, w: this.w, h: this.h },
+      { x: this.x * this.w, y: this.y, w: this.w, h: this.h },
     ];
 
     this.vx = 30;
     this.vy = 0;
 
     this.tick = 0;
+
+    this.drawCount = 10;
   }
 
   draw() {
@@ -30,8 +32,29 @@ class Snake {
     });
   }
 
+  gameOver() {
+    console.error("game over");
+  }
+
+  checkCollisions() {
+    if (
+      this.x + this.w > this.ctx.canvas.width ||
+      this.x < 0 ||
+      this.y < 0 ||
+      this.y + this.h > this.ctx.canvas.height
+    ) {
+      this.gameOver();
+    }
+
+    this.parts.forEach((part) => {
+      if (this.collides(part)) {
+        this.gameOver();
+      }
+    });
+  }
+
   move() {
-    if (this.tick++ > 10) {
+    if (this.tick++ > this.drawCount) {
       this.tick = 0;
 
       this.x += this.vx;
@@ -47,11 +70,24 @@ class Snake {
     }
   }
 
+  collides(el) {
+    const colX = el.x < this.x + this.w && el.x + el.w > this.x;
+    const colY = el.y < this.y + this.h && el.y + el.h > this.y;
+
+    return colX && colY;
+  }
+
   grow() {
-    this.parts.push({
+    this.parts.unshift({
       x: this.parts[0].x,
       y: this.parts[0].y,
+      w: this.w,
+      h: this.h,
     });
+
+    if (this.drawCount > 0) {
+      this.drawCount--;
+    }
   }
 
   onKeyDown(code) {
